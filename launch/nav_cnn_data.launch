@@ -1,0 +1,17 @@
+<launch>
+  <!-- Subgoal Publisher -->
+  <node name="pure_pursuit" pkg="drl_vo_nav" type="pure_pursuit.py" output="screen" required="true">
+    <remap from="path" to="move_base/NavfnROS/plan"/>
+    <param name="rate"  type="double" value="20"  />
+  </node>
+
+  <!-- CNN Data  Publisher -->
+  <node name="cnn_data_pub" pkg="drl_vo_nav" type="cnn_data_pub.py"/>
+
+  <!-- Robot Pose Publisher -->
+  <node name="robot_pose_pub" pkg="drl_vo_nav" type="robot_pose_pub.py"/>
+
+  <!-- Goal visualization -->
+  <node name="goal_visualize" pkg="drl_vo_nav" type="goal_visualize.py" output="screen" />
+
+</launch>
