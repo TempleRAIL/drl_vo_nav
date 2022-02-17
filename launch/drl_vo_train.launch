@@ -1,6 +1,6 @@
 <launch>
-  <arg name="model_file"   default="/home/xzt/social_navigation_ws/src/drl_vo_nav/src/model/drl_pre_train.zip"/>
-  <arg name="log_dir"   default="/home/xzt/social_navigation_ws/src/drl_vo_nav/src/runs"/>
+  <arg name="model_file"   default="$(find drl_vo_nav)/src/model/drl_pre_train.zip"/>
+  <arg name="log_dir"   default="$(find drl_vo_nav)/src/drl_vo_nav/src/runs"/>
 
   <include file="$(find turtlebot_teleop)/launch/includes/velocity_smoother.launch.xml"/>
 

@@ -1,5 +1,5 @@
 <launch>
-  <arg name="model_file"   default="/home/xzt/social_navigation_ws/src/drl_vo_nav/src/model/drl_vo.zip"/>
+  <arg name="model_file"   default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
 
   <include file="$(find turtlebot_teleop)/launch/includes/velocity_smoother.launch.xml"/>
 
