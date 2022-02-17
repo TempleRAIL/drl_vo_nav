@@ -1,0 +1,47 @@
+<launch>
+  <arg name="scene_file" default="$(find pedsim_simulator)/scenarios/eng_hall.xml"/>
+  <arg name="world_name" default="$(find pedsim_gazebo_plugin)/worlds/eng_hall.world"/>
+  <arg name="gui" default="true" doc="Bring up the Gazebo graphical interface"/>
+  <arg name="pose_initial_x" default="1.0"/> 
+  <arg name="pose_initial_y" default="1.0"/>
+  <arg name="map_file" default="$(find robot_gazebo)/maps/gazebo_eng_lobby/gazebo_eng_lobby.yaml"/>
+  <arg name="initial_pose_x" default="1.0"/>
+  <arg name="initial_pose_y" default="0.0"/>
+  <arg name="initial_pose_a" default="0.13"/>
+  <arg name="model_file" default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+
+  <!-- Pedsim Gazebo -->
+  <include file="$(find pedsim_simulator)/launch/robot.launch">
+    <arg name="scene_file" value="$(arg scene_file)"/>
+    <arg name="world_name" value="$(arg world_name)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="pose_initial_x" value="$(arg pose_initial_x)"/> 
+    <arg name="pose_initial_y" value="$(arg pose_initial_y)"/>
+  </include>
+
+  <!-- AMCL -->
+  <include file="$(find robot_gazebo)/launch/amcl_demo_drl.launch">
+    <arg name="map_file" value="$(arg map_file)"/>
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
+  <!-- YOLO Detector -->
+  <include file="$(find darknet_ros)/launch/yolo_v3.launch"/>
+
+  <!-- MHT Tracker -->
+  <include file="$(find openmht)/launch/mht.launch"/>
+
+  <!-- CNN DATA -->
+  <include file="$(find drl_vo_nav)/launch/nav_cnn_data.launch"/>
+
+  <!-- DRL-VO Control Policy -->
+  <include file="$(find drl_vo_nav)/launch/drl_vo_inference.launch">
+    <arg name="model_file" value="$(arg model_file)"/>
+  </include>
+
+  <!-- Rviz -->
+  <include file="$(find robot_gazebo)/launch/view_navigation.launch"/>
+
+</launch>

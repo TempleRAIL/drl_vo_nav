@@ -1,0 +1,18 @@
+<launch>
+  <arg name="model_file"   default="$(find drl_vo_nav)/src/model/drl_pre_train.zip"/>
+  <arg name="log_dir"   default="$(find drl_vo_nav)/src/drl_vo_nav/src/runs"/>
+
+  <include file="$(find turtlebot_teleop)/launch/includes/velocity_smoother.launch.xml"/>
+
+  <!-- DRL-VO publisher -->
+  <node name="drl_vo_cmd" pkg="drl_vo_nav" type="drl_vo_train.py" output="screen">
+    <param name="model_file" value="$(arg model_file)" type="string"/>
+    <param name="log_dir" value="$(arg log_dir)" type="string"/>
+  </node>
+
+  <!-- Mix cmd vel publisher -->
+  <node name="mix_cmd_vel" pkg="drl_vo_nav" type="cmd_vel_pub.py" output="screen" >
+    <remap from="cmd_vel" to="teleop_velocity_smoother/raw_cmd_vel"/>
+  </node>  
+
+</launch>
