@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 #
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to train the DRL-VO policy using the PPO algorithm.
+#------------------------------------------------------------------------------
+
 import numpy as np
 import gym
 import turtlebot_gym

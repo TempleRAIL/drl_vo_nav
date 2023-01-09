@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to setup the basic functions to control the Gazebo world.
+#------------------------------------------------------------------------------
 
 import rospy
 from std_srvs.srv import Empty

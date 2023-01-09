@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to visualize the goal point in the rviz.
+#------------------------------------------------------------------------------
 
 import rospy
 from std_msgs.msg import Header

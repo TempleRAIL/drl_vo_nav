@@ -11,6 +11,9 @@
   <!-- Robot Pose Publisher -->
   <node name="robot_pose_pub" pkg="drl_vo_nav" type="robot_pose_pub.py"/>
 
+  <!-- Pedestrian Publisher -->
+  <node name="track_ped_pub" pkg="drl_vo_nav" type="track_ped_pub.py" output="screen"/>
+
   <!-- Goal visualization -->
   <node name="goal_visualize" pkg="drl_vo_nav" type="goal_visualize.py" output="screen" />
 

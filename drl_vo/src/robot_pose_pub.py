@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to publish the robot pose.
+#------------------------------------------------------------------------------
 
 import rospy
 import geometry_msgs.msg

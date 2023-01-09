@@ -33,19 +33,6 @@
     <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
   </include>
 
-  <!-- YOLO Detector -->
-  <include file="$(find darknet_ros)/launch/yolo_v3.launch">
-    <arg name="output" value="$(arg output)"/>
-    <arg name="enable_opencv" value="$(arg enable_opencv)"/>
-    <arg name="enable_console_output" value="$(arg enable_console_output)"/>
-  </include>
-
-
-  <!-- MHT Tracker -->
-  <include file="$(find openmht)/launch/mht.launch">
-    <arg name="output" value="$(arg output)"/>
-  </include>
-
   <!-- CNN DATA -->
   <include file="$(find drl_vo_nav)/launch/nav_cnn_data.launch"/>
 

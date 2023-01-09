@@ -1,19 +1,11 @@
 #!/usr/bin/env python
 #
-# file: $ISIP_EXP/tuh_dpath/exp_0074/scripts/decode.py
+# revision history: xzt
+#  20210604 (TE): first version
 #
-# revision history:
-#  20190925 (TE): first version
+# usage: python drl_vo_inference.py
 #
-# usage:
-#  python decode.py odir mfile data
-#
-# arguments:
-#  odir: the directory where the hypotheses will be stored
-#  mfile: input model file
-#  data: the input data list to be decoded
-#
-# This script decodes data using a simple MLP model.
+# This script is the inference code of the DRL-VO policy.
 #------------------------------------------------------------------------------
 
 # import modules
@@ -81,16 +73,27 @@ class DrlInference:
         self.ped_pos = cnn_data_msg.ped_pos_map
         self.scan = cnn_data_msg.scan
         self.goal = cnn_data_msg.goal_cart
-
         cmd_vel = Twist()
+
+        # minimum distance:
+        scan = np.array(self.scan[-540:-180])
+        scan = scan[scan!=0]
+        if(scan.size!=0):
+            min_scan_dist = np.amin(scan)
+        else:
+            min_scan_dist = 10
+
         # if the goal is close to the robot:
-        if np.linalg.norm(self.goal) <= 0.9:
+        if(np.linalg.norm(self.goal) <= 0.9):  # goal margin
+                cmd_vel.linear.x = 0
+                cmd_vel.angular.z = 0
+        elif(min_scan_dist <= 0.4): # obstacle margin
             cmd_vel.linear.x = 0
-            cmd_vel.angular.z = 0
+            cmd_vel.angular.z = 0.7
         else:
             # MaxAbsScaler:
-            v_min = -2 #-2.5
-            v_max = 2 #2.5
+            v_min = -2 
+            v_max = 2 
             self.ped_pos = np.array(self.ped_pos, dtype=np.float32)
             self.ped_pos = 2 * (self.ped_pos - v_min) / (v_max - v_min) + (-1)
 
@@ -127,8 +130,8 @@ class DrlInference:
             # MaxAbsScaler:
             vx_min = 0
             vx_max = 0.5
-            vz_min = -2 #-3
-            vz_max = 2 #3
+            vz_min = -2 # -0.7
+            vz_max = 2 # 0.7
             cmd_vel.linear.x = (action[0] + 1) * (vx_max - vx_min) / 2 + vx_min
             cmd_vel.angular.z = (action[1] + 1) * (vz_max - vz_min) / 2 + vz_min
         

@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to publish the sub-goal point using the pure pursit algorithm.
+#------------------------------------------------------------------------------
 
 import rospy
 from nav_msgs.msg import Path

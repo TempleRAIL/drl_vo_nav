@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to setup the Gym-Gazebo training environment for the turtlebot.
+#------------------------------------------------------------------------------
+
 import numpy as np
 import numpy.matlib
 import random
@@ -20,10 +30,9 @@ from geometry_msgs.msg import Pose, Twist, Point, PoseStamped, PoseWithCovarianc
 import time
 from kobuki_msgs.msg import BumperEvent
 from actionlib_msgs.msg import GoalStatusArray
-
+from pedsim_msgs.msg  import TrackedPersons, TrackedPerson
 from cnn_msgs.msg import CNN_data
-from mht_msgs.msg import TrackingHistory
-from mht_msgs.msg import TrackingResults
+
 
 
 class DRLNavEnv(gym.Env):
@@ -58,8 +67,8 @@ class DRLNavEnv(gym.Env):
         self.max_angular_speed = 2
         # observation limits
         # action space
-        #self.high_action = np.array([self.max_linear_speed, self.max_angular_speed])
-        #self.low_action = np.array([0, -self.max_angular_speed])
+        # self.high_action = np.array([self.max_linear_speed, self.max_angular_speed])
+        # self.low_action = np.array([0, -self.max_angular_speed])
         # MaxAbsScaler: normalize to (-1,1)
         self.high_action = np.array([1, 1])
         self.low_action = np.array([-1, -1])
@@ -71,7 +80,7 @@ class DRLNavEnv(gym.Env):
         self.goal = []
         #self.vel = []
        
-        #self.observation_space = spaces.Box(low=-30, high=30, shape=(6402,), dtype=np.float32)
+        # self.observation_space = spaces.Box(low=-30, high=30, shape=(6402,), dtype=np.float32)
         # MaxAbsScaler: normalize to (-1,1)
         self.observation_space = spaces.Box(low=-1, high=1, shape=(19202,), dtype=np.float32)
         # info, initial position and goal position
@@ -88,7 +97,7 @@ class DRLNavEnv(gym.Env):
         self._reset = True
 
         # vo algorithm:
-        self.mht_peds = TrackingResults()
+        self.mht_peds = TrackedPersons()
 
         # To reset Simulations
         self.gazebo = GazeboConnection(
@@ -106,15 +115,15 @@ class DRLNavEnv(gym.Env):
         self._goal_status_sub = rospy.Subscriber("/move_base/status", GoalStatusArray, self._goal_status_callback) #, queue_size=1)
         # self._model_states_sub = rospy.Subscriber("/gazebo/model_states", ModelStates, self._model_states_callback, queue_size=1)
         # self._bumper_sub = rospy.Subscriber("/mobile_base/events/bumper", BumperEvent, self._bumper_callback) #, queue_size=1)
-        #self._dwa_vel_sub = rospy.Subscriber('/move_base/cmd_vel', Twist, self._dwa_vel_callback)
-        self._ped_sub = rospy.Subscriber("/tracking_conclude", TrackingResults, self._mht_callback)
+        # self._dwa_vel_sub = rospy.Subscriber('/move_base/cmd_vel', Twist, self._dwa_vel_callback)
+        self._ped_sub = rospy.Subscriber("/track_ped", TrackedPersons, self._ped_callback)
         # Publish velocities:
-        #self._cmd_vel_pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=1, latch=False)
+        # self._cmd_vel_pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=1, latch=False)
         self._cmd_vel_pub = rospy.Publisher('/drl_cmd_vel', Twist, queue_size=5, latch=False)
         # Publish goal:
         self._initial_goal_pub = rospy.Publisher('/move_base_simple/goal', PoseStamped, queue_size=1, latch=True)
         # Set model state:
-        #self._set_robot_state_publisher = rospy.Publisher("/gazebo/set_model_state", ModelState, queue_size=1, latch=False)
+        # self._set_robot_state_publisher = rospy.Publisher("/gazebo/set_model_state", ModelState, queue_size=1, latch=False)
         self._set_robot_state_service = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
         # Set odometry:
         # self._reset_odom_pub = rospy.Publisher('/mobile_base/commands/reset_odometry', Empty, queue_size=1, latch=True)
@@ -122,7 +131,7 @@ class DRLNavEnv(gym.Env):
         self._initial_pose_pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=1, latch=True)
         # self._done_pub = rospy.Publisher('/drl_done', Bool, queue_size=1, latch=False)
 
-        #self.controllers_object.reset_controllers()
+        # self.controllers_object.reset_controllers()
         self._check_all_systems_ready()
         self.gazebo.pauseSim()   
             
@@ -652,7 +661,7 @@ class DRLNavEnv(gym.Env):
         return
 
     # Callback function for the pedestrian subscriber
-    def _mht_callback(self, trackPed_msg): 
+    def _ped_callback(self, trackPed_msg): 
         self.mht_peds = trackPed_msg
 
     # ----------------------------
@@ -1011,20 +1020,20 @@ class DRLNavEnv(gym.Env):
         d_theta = theta_pre
 
         # get the pedstrain's position:
-        if(mht_peds.isempty == 0):  # tracker results
+        if(len(mht_peds.tracks) != 0):  # tracker results
             d_theta = np.pi/2 #theta_pre
             N = 60
             theta_min = 1000
             for i in range(N):
                 theta = random.uniform(-np.pi, np.pi)
                 free = True
-                for ped in mht_peds.trackinghistory:
+                for ped in mht_peds.tracks:
                     #ped_id = ped.track_id 
                     # create pedestrian's postion costmap: 10*10 m
-                    p_x = ped.position[-1].x
-                    p_y = ped.position[-1].y
-                    p_vx = ped.velocity[-1].x
-                    p_vy = ped.velocity[-1].y
+                    p_x = ped.pose.pose.position.x
+                    p_y = ped.pose.pose.position.y
+                    p_vx = ped.twist.twist.linear.x
+                    p_vy = ped.twist.twist.linear.y
                     
                     ped_dis = np.linalg.norm([p_x, p_y])
                     if(ped_dis <= 7):

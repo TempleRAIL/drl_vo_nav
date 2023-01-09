@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+#
+# revision history: xzt
+#  20210604 (TE): first version
+#
+# usage:
+#
+# This script is to publish the goal points and evaluate the navigation performance.
+#------------------------------------------------------------------------------
+
 import rospy
 import math
 

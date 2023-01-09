@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 #
-# file: $ISIP_EXP/tuh_dpath/exp_0074/scripts/model.py
-#
-# revision history:
-#  20190925 (TE): first version
+# revision history: xzt
+#  20210604 (TE): first version
 #
 # usage:
 #
-# This script hold the model architecture
+# This script is the DRL-VO network.
 #------------------------------------------------------------------------------
 
 # import pytorch modules:
