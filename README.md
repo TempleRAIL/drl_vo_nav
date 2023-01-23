@@ -2,7 +2,7 @@
 
 Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles"](https://arxiv.org/pdf/2301.06512.pdf). 
 This reporsitory includes the code of our DRL-VO control policy and its 3D human-robot interaction Gazebo simulator.
-Multimedia demonstrations are available at https://www.youtube.com/watch?v=eCcNYSbgCv8&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS.
+Video demos can be found at [multimedia demonstrations](https://www.youtube.com/watch?v=KneELRT8GzU&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS&index=2&ab_channel=PhilipDames).
 Here are two GIFs showing the navigation performance of our DRL-VO control policy in the simulation and real world. 
 * Simulation:
 ![simulation_demo](demo/1.simulation_demo.gif "simulation_demo") 
