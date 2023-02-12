@@ -18,14 +18,10 @@ import tf
 from cnn_msgs.msg import CNN_data
 from cv_bridge import CvBridge, CvBridgeError
 # custom define messages:
-from darknet_ros_msgs.msg import BoundingBoxes
 from geometry_msgs.msg import Point, PoseStamped, Twist, TwistStamped
 from pedsim_msgs.msg import TrackedPerson, TrackedPersons
 from scipy.optimize import linprog
 from sensor_msgs.msg import Image, LaserScan
-from mht_msgs.msg import TrackingHistory
-from mht_msgs.msg import TrackingResults
-
 
 # parameters:
 NUM_TP = 10     # the number of timestamps
