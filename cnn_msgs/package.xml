@@ -3,10 +3,10 @@
   <name>cnn_msgs</name>
   <version>1.1.3</version>
   <description>CNN Data Package</description>
-  <maintainer email="xzt">xzt</maintainer>
+  <maintainer email="xzt@email.todo">xzt</maintainer>
   <license>BSD</license>
-  <url type="website">https://github.com/leggedrobotics/darknet_ros</url>
-  <author email="xzt">xzt</author>
+  <url type="website">https://github.com</url>
+  <author email="xzt@email.todo">xzt</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
