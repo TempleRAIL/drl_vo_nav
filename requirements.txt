@@ -1,0 +1,5 @@
+torch==1.7.1
+pandas==1.2.1
+gym==0.18.0
+stable-baselines3==1.1.0
+tensorboard==2.4.0
