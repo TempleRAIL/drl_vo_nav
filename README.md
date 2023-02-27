@@ -29,7 +29,7 @@ This package requires these packages:
 
 We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 1) independently install them on your PC;
-2) use a pre-created singularity container directly (no need to configure the environment).
+2) use a [pre-created singularity container](https://doi.org/10.5281/zenodo.7679658) directly (no need to configure the environment).
 
 ### 1) Independent installation on PC:
 1. install ROS Noetic by following [ROS installation document](http://wiki.ros.org/noetic/Installation/Ubuntu). 
