@@ -12,7 +12,6 @@ import rospy
 import geometry_msgs.msg
 from geometry_msgs.msg import TwistStamped, Twist, PoseStamped, Pose
 import tf
-from scipy.optimize import linprog
 from geometry_msgs.msg import Point
 
 import numpy as np

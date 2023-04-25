@@ -1,6 +1,8 @@
 # DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles
 
-Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles"](https://arxiv.org/pdf/2301.06512.pdf) in TRO 2023. 
+Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles"](
+https://doi.org/10.1109/TRO.2023.3257549
+)([arXiv](https://arxiv.org/pdf/2301.06512.pdf)) in IEEE Transactions on Robotics (T-RO) 2023. 
 This repository contains our DRL-VO code for training and testing the DRL-VO control policy in its [3D human-robot interaction Gazebo simulator](https://github.com/TempleRAIL/pedsim_ros_with_gazebo).
 Video demos can be found at [multimedia demonstrations](https://www.youtube.com/watch?v=KneELRT8GzU&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS&index=2&ab_channel=PhilipDames).
 Here are two GIFs showing our DRL-VO control policy for navigating in the simulation and real world. 
@@ -68,37 +70,70 @@ sudo apt install ./singularity-ce_3.9.7-bionic_amd64.deb
 
 ## Usage:
 ### Running on PC:
-*  train:
+*  train on desktop (with a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
-roslaunch drl_vo_nav drl_vo_nav_train.launch
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 ```
-*  inference (navigation):
+*  train on server (without a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
-roslaunch drl_vo_nav drl_vo_nav.launch
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
+```
+*  inference on desktop (navigation):
+```
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_navigation_demo.sh
 ```
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
 ### Running on singularity container:
-*  train:
+*  train on desktop (with a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-roslaunch drl_vo_nav drl_vo_nav_train.launch
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 ```
-*  inference (navigation):
+*  train on server (without a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-roslaunch drl_vo_nav drl_vo_nav.launch
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
+```
+*  inference on desktop (navigation):
+```
+cd ~
+singularity shell --nv drl_vo_container.sif
+source /etc/.bashrc
+roscd drl_vo_nav
+cd ..
+sh run_drl_vo_navigation_demo.sh
 ```
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
 ## Citation
 ```
+@article{xie2023drl,
+  author={Xie, Zhanteng and Dames, Philip},
+  journal={IEEE Transactions on Robotics}, 
+  title={DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-20},
+  doi={10.1109/TRO.2023.3257549}}
+
 @article{xie2023drl,
   title={DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles},
   author={Xie, Zhanteng and Dames, Philip},

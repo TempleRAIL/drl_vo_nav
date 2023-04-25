@@ -8,20 +8,13 @@
 #
 # This script is to publish pedestrian kinematic maps and lidar historical map.
 #------------------------------------------------------------------------------
-
-import cv2
-import message_filters
 import numpy as np
-from random import choice
 import rospy
-import tf
 from cnn_msgs.msg import CNN_data
-from cv_bridge import CvBridge, CvBridgeError
 # custom define messages:
 from geometry_msgs.msg import Point, PoseStamped, Twist, TwistStamped
 from pedsim_msgs.msg import TrackedPerson, TrackedPersons
-from scipy.optimize import linprog
-from sensor_msgs.msg import Image, LaserScan
+from sensor_msgs.msg import LaserScan
 
 # parameters:
 NUM_TP = 10     # the number of timestamps
