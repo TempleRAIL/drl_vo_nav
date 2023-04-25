@@ -97,8 +97,7 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-roscd drl_vo_nav
-cd ..
+wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_policy_training_desktop.sh
 sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 ```
 *  train on server (without a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
@@ -106,8 +105,7 @@ sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-roscd drl_vo_nav
-cd ..
+wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_policy_training_server.sh
 sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
 ```
 *  inference on desktop (navigation):
@@ -115,8 +113,7 @@ sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-roscd drl_vo_nav
-cd ..
+wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_navigation_demo.sh
 sh run_drl_vo_navigation_demo.sh
 ```
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
