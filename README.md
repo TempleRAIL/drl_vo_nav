@@ -126,9 +126,9 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
   journal={IEEE Transactions on Robotics}, 
   title={DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles}, 
   year={2023},
-  volume={},
-  number={},
-  pages={1-20},
+  volume={39},
+  number={4},
+  pages={2700-2719},
   doi={10.1109/TRO.2023.3257549}}
 
 @article{xie2023drl,

@@ -204,9 +204,10 @@ class PurePursuit:
 
             goal = pt  
             ##### YOUR CODE ENDS HERE #####
-            end_goal_pos = [self.path.poses[-1].pose.position.x, self.path.poses[-1].pose.position.y]
-            end_goal_rot = [self.path.poses[-1].pose.orientation.x, self.path.poses[-1].pose.orientation.y, \
-                                self.path.poses[-1].pose.orientation.z, self.path.poses[-1].pose.orientation.w,] 
+            
+        end_goal_pos = [self.path.poses[-1].pose.position.x, self.path.poses[-1].pose.position.y]
+        end_goal_rot = [self.path.poses[-1].pose.orientation.x, self.path.poses[-1].pose.orientation.y, \
+                            self.path.poses[-1].pose.orientation.z, self.path.poses[-1].pose.orientation.w,] 
 
         return (goal, end_goal_pos, end_goal_rot)
 
