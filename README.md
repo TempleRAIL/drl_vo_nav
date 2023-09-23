@@ -67,6 +67,24 @@ sudo apt install ./singularity-ce_3.9.7-bionic_amd64.deb
 ```
 2. download pre-created ["drl_vo_container.sif"](https://doi.org/10.5281/zenodo.7679658) to the home directory.
 
+3. install DRL-VO ROS navigation packages:
+```
+cd ~
+singularity shell --nv drl_vo_container.sif
+source /etc/.bashrc
+cd ~
+mkdir catkin_ws
+cd catkin_ws
+mkdir src
+cd src
+git clone https://github.com/TempleRAIL/robot_gazebo.git
+git clone https://github.com/TempleRAIL/pedsim_ros_with_gazebo.git
+git clone https://github.com/TempleRAIL/drl_vo_nav.git
+cd ..
+catkin_make
+```
+
+4. ctrl + D to exit the singularity container.
 
 ## Usage:
 ### Running on PC:
@@ -97,7 +115,9 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_policy_training_desktop.sh
+source catkin_ws/devel/setup.sh
+roscd drl_vo_nav
+cd ..
 sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 ```
 *  train on server (without a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
@@ -105,7 +125,9 @@ sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_policy_training_server.sh
+source catkin_ws/devel/setup.sh
+roscd drl_vo_nav
+cd ..
 sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
 ```
 *  inference on desktop (navigation):
@@ -113,7 +135,9 @@ sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-wget https://raw.githubusercontent.com/TempleRAIL/drl_vo_nav/drl_vo/run_drl_vo_navigation_demo.sh
+source catkin_ws/devel/setup.sh
+roscd drl_vo_nav
+cd ..
 sh run_drl_vo_navigation_demo.sh
 ```
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
