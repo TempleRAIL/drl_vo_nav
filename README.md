@@ -42,20 +42,26 @@ pip install gym==0.18.0 pandas==1.2.1
 pip install stable-baselines3==1.1.0
 pip install tensorboard psutil cloudpickle
 ```
-3. install DRL-VO ROS navigation packages:
+3. install Turtlebot2 ROS packages:
 ```
-cd ~
-mkdir catkin_ws
-cd catkin_ws
-mkdir src
-cd src
+sudo apt-get install ros-noetic-move-base*
+sudo apt-get install ros-noetic-map-server*
+sudo apt-get install ros-noetic-amcl*
+sudo apt-get install ros-noetic-navigation*
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+wget https://raw.githubusercontent.com/zzuxzt/turtlebot2_noetic_packages/master/turtlebot2_noetic_install.sh 
+sudo sh turtlebot2_noetic_install.sh 
+```
+4. install DRL-VO ROS navigation packages:
+```
+cd ~/catkin_ws/src
 git clone https://github.com/TempleRAIL/robot_gazebo.git
 git clone https://github.com/TempleRAIL/pedsim_ros_with_gazebo.git
 git clone https://github.com/TempleRAIL/drl_vo_nav.git
-wget https://raw.githubusercontent.com/zzuxzt/turtlebot2_noetic_packages/master/turtlebot2_noetic_install.sh 
-sudo sh turtlebot2_noetic_install.sh 
 cd ..
 catkin_make
+source ~/catkin_ws/devel/setup.sh
 ```
 
 ### 2) Using singularity container: all required packages are installed
@@ -72,16 +78,14 @@ sudo apt install ./singularity-ce_3.9.7-bionic_amd64.deb
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-cd ~
-mkdir catkin_ws
-cd catkin_ws
-mkdir src
-cd src
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
 git clone https://github.com/TempleRAIL/robot_gazebo.git
 git clone https://github.com/TempleRAIL/pedsim_ros_with_gazebo.git
 git clone https://github.com/TempleRAIL/drl_vo_nav.git
 cd ..
 catkin_make
+source ~/catkin_ws/devel/setup.sh
 ```
 
 4. ctrl + D to exit the singularity container.
@@ -115,7 +119,7 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-source catkin_ws/devel/setup.sh
+source ~/catkin_ws/devel/setup.sh
 roscd drl_vo_nav
 cd ..
 sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
@@ -125,7 +129,7 @@ sh run_drl_vo_policy_training_desktop.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-source catkin_ws/devel/setup.sh
+source ~/catkin_ws/devel/setup.sh
 roscd drl_vo_nav
 cd ..
 sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
@@ -135,7 +139,7 @@ sh run_drl_vo_policy_training_server.sh ~/drl_vo_runs
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
-source catkin_ws/devel/setup.sh
+source ~/catkin_ws/devel/setup.sh
 roscd drl_vo_nav
 cd ..
 sh run_drl_vo_navigation_demo.sh
@@ -148,7 +152,7 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 @article{xie2023drl,
   author={Xie, Zhanteng and Dames, Philip},
   journal={IEEE Transactions on Robotics}, 
-  title={DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles}, 
+  title={{DRL-VO}: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles}, 
   year={2023},
   volume={39},
   number={4},
@@ -156,7 +160,7 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
   doi={10.1109/TRO.2023.3257549}}
 
 @article{xie2023drl,
-  title={DRL-VO: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles},
+  title={{DRL-VO}: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles},
   author={Xie, Zhanteng and Dames, Philip},
   journal={arXiv preprint arXiv:2301.06512},
   year={2023}
