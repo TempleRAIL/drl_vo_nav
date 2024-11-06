@@ -1,0 +1,19 @@
+<launch>
+  <arg name="scan_topic"      default="scan"/> 
+  <arg name="ped_topic"      default="zed_node/obj_det/objects"/> 
+  <arg name="vel_topic"      default="jackal_velocity_controller/cmd_vel"/> 
+
+  <!-- Subgoal Publisher -->
+  <node name="pure_pursuit" pkg="drl_vo_nav" type="pure_pursuit.py" output="screen" required="true" />
+
+  <!-- CNN Data  Publisher -->
+  <node name="cnn_data_pub" pkg="drl_vo_nav" type="cnn_data_pub.py">
+    <remap from="scan"                                            to="$(arg scan_topic)"/>
+    <remap from="zed_node/obj_det/objects"                        to="$(arg ped_topic)"/>
+    <remap from="jackal_velocity_controller/cmd_vel"              to="$(arg vel_topic)"/>
+  <node>
+
+  <!-- Goal visualization -->
+  <node name="goal_visualize" pkg="drl_vo_nav" type="goal_visualize.py" output="screen" />
+
+</launch>

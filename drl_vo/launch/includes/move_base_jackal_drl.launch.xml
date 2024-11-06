@@ -1,0 +1,49 @@
+<!-- 
+    ROS navigation stack with velocity smoother and safety (reactive) controller
+-->
+<launch>
+  <arg name="odom_frame_id"   default="odom"/>
+  <arg name="base_frame_id"   default="base_link"/>
+  <arg name="global_frame_id" default="map"/>
+  <arg name="odom_topic" default="odometry/filtered" />
+  <arg name="scan_topic" default="scan" />
+  <arg name="custom_param_file" default="$(find drl_vo_nav)/param/dummy.yaml"/>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find drl_vo_nav)/param/jackal/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find drl_vo_nav)/param/jackal/costmap_common_params.yaml" command="load" ns="local_costmap" />   
+    <rosparam file="$(find drl_vo_nav)/param/jackal/local_costmap_params.yaml" command="load" />   
+    <rosparam file="$(find drl_vo_nav)/param/jackal/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find drl_vo_nav)/param/jackal/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find drl_vo_nav)/param/jackal/move_base_params.yaml" command="load" />
+    <rosparam file="$(find drl_vo_nav)/param/jackal/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find drl_vo_nav)/param/jackal/navfn_global_planner_params.yaml" command="load" />
+    <!-- external params file that could be loaded into the move_base namespace -->
+    <rosparam file="$(arg custom_param_file)" command="load" />
+    
+    <!-- reset frame_id parameters using user input data -->
+    <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
+    <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+    <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
+    <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+    <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
+
+    <remap from="cmd_vel" to="/dwa/cmd_vel"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <remap from="scan" to="$(arg scan_topic)"/>
+  </node>
+
+  <!-- velocity smoother -->
+  <arg name="vel_config_file"           default="$(find drl_vo_nav)/param/standalone.yaml"/>
+  <arg name="raw_cmd_vel_topic"     default="raw_cmd_vel"/>
+  <arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>
+  <arg name="robot_cmd_vel_topic"   default="jackal_velocity_controller/cmd_vel"/>
+  
+  <include file="$(find drl_vo_nav)/launch/includes/velocity_smoother.launch">
+    <arg name="config_file"           value="$(arg vel_config_file)"/>
+    <arg name="raw_cmd_vel_topic"     value="$(arg raw_cmd_vel_topic)"/>
+    <arg name="smooth_cmd_vel_topic"  value="$(arg smooth_cmd_vel_topic)"/>
+    <arg name="robot_cmd_vel_topic"   value="$(arg robot_cmd_vel_topic)"/>
+    <arg name="odom_topic"            value="$(arg odom_topic)"/>
+  </include>
+</launch>

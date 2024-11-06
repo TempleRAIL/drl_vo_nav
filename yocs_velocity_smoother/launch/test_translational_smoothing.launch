@@ -1,0 +1,22 @@
+<!--
+  Tests the velocity smoother with varied translational inputs.
+ -->
+<launch>
+  <node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="velocity_smoother" args="load yocs_velocity_smoother/VelocitySmootherNodelet nodelet_manager" output="screen">
+    <rosparam file="$(find yocs_velocity_smoother)/param/standalone.yaml" command="load"/>
+    <remap from="velocity_smoother/odometry" to="odom"/>
+    <remap from="velocity_smoother/robot_cmd_vel" to="cmd_vel/output"/>
+    <remap from="velocity_smoother/raw_cmd_vel" to="cmd_vel/input"/>
+    <remap from="velocity_smoother/smooth_cmd_vel" to="cmd_vel/output"/>
+  </node>
+  <node pkg="yocs_velocity_smoother" type="test_translational_input.py" name="test_translational_input" output="screen">
+    <remap from="test_translational_input/cmd_vel" to="cmd_vel/input"/>
+    <remap from="test_translational_input/odom" to="odom"/>
+    <!--
+      <param name="velocity_maximum" value="0.50"/>  
+     -->
+    <param name="ramp_increment" value="0.01"/>  
+    <param name="ramp_decrement" value="0.01"/>  
+  </node>
+</launch>

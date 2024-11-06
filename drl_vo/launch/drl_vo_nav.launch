@@ -1,39 +1,48 @@
 <launch>
-  <arg name="scene_file" default="$(find pedsim_simulator)/scenarios/eng_hall.xml"/>
-  <arg name="world_name" default="$(find pedsim_gazebo_plugin)/worlds/eng_hall.world"/>
-  <arg name="gui" default="true" doc="Bring up the Gazebo graphical interface"/>
-  <arg name="pose_initial_x" default="1.0"/> 
-  <arg name="pose_initial_y" default="1.0"/>
-  <arg name="map_file" default="$(find robot_gazebo)/maps/gazebo_eng_lobby/gazebo_eng_lobby.yaml"/>
-  <arg name="initial_pose_x" default="1.0"/>
-  <arg name="initial_pose_y" default="0.0"/>
-  <arg name="initial_pose_a" default="0.13"/>
+  <!-- Map -->
+  <arg name="map_file" default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
   <arg name="model_file" default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
-  <!-- Output -->
-  <arg name="output" default="log"/>
-  <arg name="enable_opencv" default="true"/>
-  <arg name="enable_console_output" default="true"/>
-  <arg name="rviz" default="true"/> 
+  <arg name="rviz" default="false"/>
+  <!-- Subscriber topics -->
+  <arg name="scan_topic"      default="scan"/>  <!-- sensor_msgs::LaserScan -->
+  <arg name="ped_topic"       default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
+  <arg name="vel_topic"       default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
+  <arg name="odom_topic"      default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
+  <!-- Publisher topics -->
+ 	<arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
+  <!-- AMCL Initial pose -->
+  <arg name="initial_pose_x"  default="0.0"/>
+	<arg name="initial_pose_y"  default="0.0"/>
+	<arg name="initial_pose_a"  default="0.0"/>
+  <!-- TF frames -->
+	<arg name="base_frame_id"   default="base_link"/>
+	<arg name="global_frame_id" default="map"/>
+  <arg name="odom_frame_id"   default="odom"/>
 
-  <!-- Pedsim Gazebo -->
-  <include file="$(find pedsim_simulator)/launch/robot.launch">
-    <arg name="scene_file" value="$(arg scene_file)"/>
-    <arg name="world_name" value="$(arg world_name)"/>
-    <arg name="gui" value="$(arg gui)"/>
-    <arg name="pose_initial_x" value="$(arg pose_initial_x)"/> 
-    <arg name="pose_initial_y" value="$(arg pose_initial_y)"/>
-  </include>
-
-  <!-- AMCL -->
-  <include file="$(find robot_gazebo)/launch/amcl_demo_drl.launch">
+  <!-- AMCL & MoveBase -->
+  <include file="$(find drl_vo_nav)/launch/amcl_demo_jackal_drl.launch">
     <arg name="map_file" value="$(arg map_file)"/>
-    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
-    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
-    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+    <!-- Input messages -->
+		<arg name="scan_topic" value="$(arg scan_topic)" /> <!-- sensor_msgs::LaserScan -->
+		<arg name="odom_topic" value="$(arg odom_topic)" /> 
+    <arg name="initial_pose_x"            value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y"            value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+		<!-- TF frames -->
+		<arg name="base_frame_id" value="$(arg odom_frame_id)" />
+		<arg name="global_frame_id" value="$(arg global_frame_id)" />
+		<arg name="odom_frame_id" value="$(arg odom_frame_id)" />
+    <!-- Velocity output -->
+		<arg name="smooth_cmd_vel_topic"  value="$(arg smooth_cmd_vel_topic)"/> 
+    <arg name="robot_cmd_vel_topic"   value="$(arg vel_topic)"/>	
   </include>
 
   <!-- CNN DATA -->
-  <include file="$(find drl_vo_nav)/launch/nav_cnn_data.launch"/>
+  <include file="$(find drl_vo_nav)/launch/cnn_data_pub.launch">
+    <arg name="scan_topic" value="$(arg scan_topic)"/>
+    <arg name="ped_topic" value="$(arg ped_topic)"/>
+    <arg name="vel_topic" value="$(arg vel_topic)"/>
+  <include>
 
   <!-- DRL-VO Control Policy -->
   <include file="$(find drl_vo_nav)/launch/drl_vo_inference.launch">
@@ -41,6 +50,6 @@
   </include>
 
   <!-- Rviz -->
-  <include file="$(find robot_gazebo)/launch/view_navigation.launch" if="$(arg rviz)"/>
+  <include file="$(find drl_vo_nav)/launch/view_navigation.launch" if="$(arg rviz)"/ >
 
 </launch>

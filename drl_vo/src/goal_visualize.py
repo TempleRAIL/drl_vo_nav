@@ -40,7 +40,7 @@ def goal_callback(goal_msg):
 if __name__ == '__main__':
     try:
         rospy.init_node('goal_vis')
-        goal_sub = rospy.Subscriber("/move_base/current_goal", PoseStamped, goal_callback)
+        goal_sub = rospy.Subscriber("move_base/current_goal", PoseStamped, goal_callback)
         goal_vis_pub = rospy.Publisher('goal_markers', Marker, queue_size=1, latch=True)
         # spin() simply keeps python from exiting until this node is stopped
         rospy.spin()

@@ -15,7 +15,7 @@ import os
 
 # ros:
 import rospy
-import tf
+#import tf
 import numpy as np
 import message_filters 
 
@@ -34,7 +34,6 @@ from custom_cnn_full import *
 #
 #-----------------------------------------------------------------------------
 
-
 # for reproducibility, we seed the rng
 #       
 policy_kwargs = dict(
@@ -47,53 +46,57 @@ policy_kwargs = dict(
 # the main program starts here
 #
 #------------------------------------------------------------------------------
-class DrlInference:
+class DrlVoInference:
     # Constructor
     def __init__(self):
         # initialize data:  
-        self.ped_pos = [] #np.ones((3, 20))*20.
-        self.scan = [] #np.zeros((3, 720))
-        self.goal = [] #np.zeros((3, 2))
+        self.ped_pos = [] 
+        self.scan = []
+        self.goal = []
         self.vx = 0
         self.wz = 0
         self.model = None
 
         # load model:
-        model_file = rospy.get_param('~model_file', "./model/drl_vo.zip")
-        self.model = PPO.load(model_file)
+        if(self.model == None):
+            model_file = rospy.get_param('~model_file', "./model/drl_vo.zip")
+            self.model = PPO.load(model_file)
+        else:
+            self.model = model
         print("Finish loading model.")
 
         # initialize ROS objects
-        self.cnn_data_sub = rospy.Subscriber("/cnn_data", CNN_data, self.cnn_data_callback)
-        self.cmd_vel_pub = rospy.Publisher('/drl_cmd_vel', Twist, queue_size=10, latch=False)
+        self.cnn_data_sub = rospy.Subscriber("cnn_data", CNN_data, self.cnn_data_callback, queue_size=1, buff_size=2**24)
+        self.cmd_vel_pub = rospy.Publisher('raw_cmd_vel', Twist, queue_size=1, latch=False)
 
 
     # Callback function for the cnn_data subscriber
     def cnn_data_callback(self, cnn_data_msg):
         self.ped_pos = cnn_data_msg.ped_pos_map
         self.scan = cnn_data_msg.scan
+        scan_all = cnn_data_msg.scan_all
         self.goal = cnn_data_msg.goal_cart
-        cmd_vel = Twist()
-
+        
         # minimum distance:
-        scan = np.array(self.scan[-540:-180])
+        scan = np.array(scan_all[360-40:-360+40])
         scan = scan[scan!=0]
         if(scan.size!=0):
             min_scan_dist = np.amin(scan)
         else:
             min_scan_dist = 10
 
+        cmd_vel = Twist()
         # if the goal is close to the robot:
-        if(np.linalg.norm(self.goal) <= 0.9):  # goal margin
-                cmd_vel.linear.x = 0
-                cmd_vel.angular.z = 0
-        elif(min_scan_dist <= 0.4): # obstacle margin
+        if np.linalg.norm(self.goal) <= 0.9: #or min_scan_dist <= 0.4:
+            cmd_vel.linear.x = 0
+            cmd_vel.angular.z = 0
+        elif min_scan_dist <= 0.6:
             cmd_vel.linear.x = 0
             cmd_vel.angular.z = 0.7
         else:
             # MaxAbsScaler:
-            v_min = -2 
-            v_max = 2 
+            v_min = -2 #-2.5
+            v_max = 2 #2.5
             self.ped_pos = np.array(self.ped_pos, dtype=np.float32)
             self.ped_pos = 2 * (self.ped_pos - v_min) / (v_max - v_min) + (-1)
 
@@ -125,13 +128,18 @@ class DrlInference:
             self.observation = np.concatenate((self.ped_pos, self.scan, self.goal), axis=None) 
 
             #self.inference()
-            action, _states = self.model.predict(self.observation)
+            action, _states = self.model.predict(self.observation, deterministic=True)
+
             # calculate the goal velocity of the robot and send the command
-            # MaxAbsScaler:
+            # velocities:
             vx_min = 0
-            vx_max = 0.5
-            vz_min = -2 # -0.7
-            vz_max = 2 # 0.7
+            if(min_scan_dist >= 2.5): # free space margin
+                vx_max = 0.75
+            else:
+                vx_max = 0.5 
+            # MaxAbsScaler inverse:
+            vz_min = -0.7 #-2
+            vz_max = 0.7 #2
             cmd_vel.linear.x = (action[0] + 1) * (vx_max - vx_min) / 2 + vx_min
             cmd_vel.angular.z = (action[1] + 1) * (vz_max - vz_min) / 2 + vz_min
         
@@ -139,8 +147,6 @@ class DrlInference:
         if not np.isnan(cmd_vel.linear.x) and not np.isnan(cmd_vel.angular.z): # ensure data is valid
             self.cmd_vel_pub.publish(cmd_vel)
 
-
-    #
     # end of function
 
 
@@ -148,8 +154,8 @@ class DrlInference:
 #
 
 if __name__ == '__main__':
-    rospy.init_node('drl_inference')
-    drl_infe = DrlInference()
+    rospy.init_node('drl_vo_inference')
+    drl_infe = DrlVoInference()
     rospy.spin()
 
 # end of file

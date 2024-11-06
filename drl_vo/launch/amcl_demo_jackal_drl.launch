@@ -1,0 +1,47 @@
+<launch>
+	<arg name="map_file" default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
+
+	<arg name="odom_topic" default="odometry/filtered" />
+  	<arg name="scan_topic" default="scan" />
+	<arg name="initial_pose_x"  default="0.0"/>
+	<arg name="initial_pose_y"  default="0.0"/>
+	<arg name="initial_pose_a"  default="0.0"/>
+	<arg name="base_frame_id"   default="base_link"/>
+	<arg name="global_frame_id" default="map"/>
+  	<arg name="odom_frame_id"   default="odom"/>
+
+ 	<arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command -->
+  	<arg name="robot_cmd_vel_topic"   default="jackal_velocity_controller/cmd_vel"/> <!-- control command -->
+
+	<!-- Map server -->
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+	<!-- Localization -->
+	<arg name="custom_amcl_launch_file" default="$(find drl_vo_nav)/launch/includes/amcl/amcl.launch.xml"/> 
+	<include file="$(arg custom_amcl_launch_file)">
+		<!-- Input messages -->
+		<arg name="scan_topic" value="$(arg scan_topic)" /> <!-- sensor_msgs::LaserScan -->
+		<arg name="initial_pose_x"            value="$(arg initial_pose_x)"/>
+    	<arg name="initial_pose_y"            value="$(arg initial_pose_y)"/>
+    	<arg name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+		<!-- TF frames -->
+		<arg name="base_frame_id" value="$(arg odom_frame_id)" />
+		<arg name="global_frame_id" value="$(arg global_frame_id)" />
+		<arg name="odom_frame_id" value="$(arg odom_frame_id)" />
+	</include>
+	
+	<!-- Move base -->
+	<include file="$(find drl_vo_nav)/launch/includes/move_base_jackal_drl.launch.xml">
+		<!-- Input messages -->
+		<arg name="scan_topic" value="$(arg scan_topic)" /> <!-- sensor_msgs::LaserScan -->
+		<arg name="odom_topic" value="$(arg odom_topic)" /> 
+		<!-- TF frames -->
+		<arg name="base_frame_id" value="$(arg odom_frame_id)" />
+		<arg name="global_frame_id" value="$(arg global_frame_id)" />
+		<arg name="odom_frame_id" value="$(arg odom_frame_id)" />
+        <!-- Velocity output -->
+		<arg name="smooth_cmd_vel_topic"  value="$(arg smooth_cmd_vel_topic)"/> 
+    	<arg name="robot_cmd_vel_topic"   value="$(arg robot_cmd_vel_topic)"/>	
+	</include>
+
+</launch>

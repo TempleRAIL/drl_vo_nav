@@ -2,7 +2,7 @@
 <package format="2">
   <name>drl_vo_nav</name>
   <version>0.0.0</version>
-  <description>The drl_nav package</description>
+  <description>The drl_vo_nav package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
