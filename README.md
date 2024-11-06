@@ -13,6 +13,7 @@ Here are two GIFs showing our DRL-VO control policy for navigating in the simula
 
 ## Introduction:
 Our DRL-VO control policy is a novel learning-based control policy with strong generalizability to new environments that enables a mobile robot to navigate autonomously through spaces filled with both static obstacles and dense crowds of pedestrians. The policy uses a unique combination of input data to generate the desired steering angle and forward velocity: a short history of lidar data, kinematic data about nearby pedestrians, and a sub-goal point. The policy is trained in a reinforcement learning setting using a reward function that contains a novel term based on velocity obstacles to guide the robot to actively avoid pedestrians and move towards the goal. This DRL-VO control policy is tested in a series of 3D simulated experiments with up to 55 pedestrians and an extensive series of hardware experiments using a turtlebot2 robot with a 2D Hokuyo lidar and a ZED stereo camera. In addition, our DRL-VO control policy ranked 1st in the simulated competition and 3rd in the final physical competition of the ICRA 2022 BARN Challenge, which is tested in highly constrained static environments using a Jackal robot. The deployment code for ICRA 2022 BARN Challenge can be found in ["nav-competition-icra2022-drl-vo"](https://github.com/TempleRAIL/nav-competition-icra2022-drl-vo).
+![DRL-VO Architecture](demos/4.fig_drl_vo_architecture.svg "drl_vo_architecture") 
 
 ## Requirements:
 * Ubuntu 20.04
@@ -30,10 +31,10 @@ This package requires these packages:
 * [turtlebot2 packages](https://github.com/zzuxzt/turtlebot2_noetic_packages): turtlebot2 packages on ROS noetic.
 
 We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
-1) independently install them on your PC;
+1) standalone install them on your PC;
 2) use a [pre-created singularity container](https://doi.org/10.5281/zenodo.7679658) directly (no need to configure the environment).
 
-### 1) Independent installation on PC:
+### 1) Standalone installation on PC:
 1. install ROS Noetic by following [ROS installation document](http://wiki.ros.org/noetic/Installation/Ubuntu). 
 2. install required learning-based packages:
 ```
@@ -90,7 +91,7 @@ source ~/catkin_ws/devel/setup.sh
 
 4. ctrl + D to exit the singularity container.
 
-## Usage:
+## Usage: 
 ### Running on PC:
 *  train on desktop (with a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
@@ -113,7 +114,7 @@ sh run_drl_vo_navigation_demo.sh
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
-### Running on singularity container:
+### Running on a singularity container: 
 *  train on desktop (with a GUI): the trained models and log files will be stored in "~/drl_vo_runs"
 ```
 cd ~
@@ -147,6 +148,44 @@ sh run_drl_vo_navigation_demo.sh
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
+### Deploy on a hardware robot or other simulator for application or evaluation:
+* take the Jackal robot equipped with a Zed2 camera and a hokuyo lidar as an example:
+You can deploy our DRL-VO control policy using either a standalone installation or a Singularity container.
+```
+roscd drl_vo_nav
+cd ..
+git checkout -b deploy
+cd ../..
+catkin_make
+source ~/catkin_ws/devel/setup.sh
+```
+Please modify the following configuration in the [drl_vo_nav.launch](./drl_vo/launch/drl_vo_nav.launch) according to your robot and environment configuration:
+```
+  <!-- Map -->
+  <arg name="map_file" default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
+  <arg name="model_file" default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+  <arg name="rviz" default="false"/>
+  <!-- Subscriber topics -->
+  <arg name="scan_topic"      default="scan"/>  <!-- sensor_msgs::LaserScan -->
+  <arg name="ped_topic"       default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
+  <arg name="vel_topic"       default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
+  <arg name="odom_topic"      default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
+  <!-- Publisher topics -->
+ 	<arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
+  <!-- AMCL initial pose -->
+  <arg name="initial_pose_x"  default="0.0"/>
+	<arg name="initial_pose_y"  default="0.0"/>
+	<arg name="initial_pose_a"  default="0.0"/>
+  <!-- TF frames -->
+	<arg name="base_frame_id"   default="base_link"/>
+	<arg name="global_frame_id" default="map"/>
+  <arg name="odom_frame_id"   default="odom"/>
+```
+You can then use roslaunch drl_vo to navigate:
+```
+roslaunch drl_vo_nav drl_vo_nav.launch
+```
+
 ## Citation
 ```
 @article{xie2023drl,
@@ -166,4 +205,12 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
   year={2023}
 }
 
+@inproceedings{xie2021towards,
+  title={Towards safe navigation through crowded dynamic environments},
+  author={Xie, Zhanteng and Xin, Pujie and Dames, Philip},
+  booktitle={2021 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  pages={4934--4940},
+  year={2021},
+  organization={IEEE}
+}
 ```
