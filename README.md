@@ -158,7 +158,6 @@ git checkout -b deploy
 cd ../..
 catkin_make
 source ~/catkin_ws/devel/setup.sh
-roslaunch drl_vo_nav drl_vo_nav.launch
 ```
 Please modify the following configuration in the [drl_vo_nav.launch](./drl_vo/launch/drl_vo_nav.launch) according to your robot and environment configuration:
 ```
@@ -182,7 +181,10 @@ Please modify the following configuration in the [drl_vo_nav.launch](./drl_vo/la
 	<arg name="global_frame_id" default="map"/>
   <arg name="odom_frame_id"   default="odom"/>
 ```
-
+You can then use roslaunch drl_vo to navigate:
+```
+roslaunch drl_vo_nav drl_vo_nav.launch
+```
 
 ## Citation
 ```
