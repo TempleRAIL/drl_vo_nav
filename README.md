@@ -171,14 +171,14 @@ Please modify the following configuration in the [drl_vo_nav.launch](./drl_vo/la
   <arg name="vel_topic"       default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
   <arg name="odom_topic"      default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
   <!-- Publisher topics -->
- 	<arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
+  <arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
   <!-- AMCL initial pose -->
   <arg name="initial_pose_x"  default="0.0"/>
-	<arg name="initial_pose_y"  default="0.0"/>
-	<arg name="initial_pose_a"  default="0.0"/>
+  <arg name="initial_pose_y"  default="0.0"/>
+  <arg name="initial_pose_a"  default="0.0"/>
   <!-- TF frames -->
-	<arg name="base_frame_id"   default="base_link"/>
-	<arg name="global_frame_id" default="map"/>
+  <arg name="base_frame_id"   default="base_link"/>
+  <arg name="global_frame_id" default="map"/>
   <arg name="odom_frame_id"   default="odom"/>
 ```
 You can then use roslaunch drl_vo to navigate:
