@@ -41,7 +41,7 @@ We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 pip install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 pip install gym==0.18.0 pandas==1.2.1
 pip install stable-baselines3==1.1.0
-pip install tensorboard psutil cloudpickle
+pip install tensorboard==2.4.1 psutil cloudpickle
 ```
 3. install Turtlebot2 ROS packages:
 ```
@@ -51,7 +51,8 @@ sudo apt-get install ros-noetic-amcl*
 sudo apt-get install ros-noetic-navigation*
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
-wget https://raw.githubusercontent.com/zzuxzt/turtlebot2_noetic_packages/master/turtlebot2_noetic_install.sh 
+wget https://raw.githubusercontent.com/zzuxzt/turtlebot2_noetic_packages/master/turtlebot2_noetic_install.sh
+chmod +x turtlebot2_noetic_install.sh 
 sudo sh turtlebot2_noetic_install.sh 
 ```
 4. install DRL-VO ROS navigation packages:
@@ -149,11 +150,10 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
 ### Deploy on a hardware robot or other simulator for application or evaluation:
-* take the Jackal robot equipped with a Zed2 camera and a hokuyo lidar as an example:
+* take the Jackal robot equipped with a ZED2 camera and a Hokuyo lidar as an example, where the ZED2 camera can directly provide pedestrian tracking information:
 You can deploy our DRL-VO control policy using either a standalone installation or a Singularity container.
 ```
 roscd drl_vo_nav
-cd ..
 git checkout -b deploy
 cd ../..
 catkin_make
@@ -198,7 +198,7 @@ roslaunch drl_vo_nav drl_vo_nav.launch
   pages={2700-2719},
   doi={10.1109/TRO.2023.3257549}}
 
-@article{xie2023drl,
+@article{xie2023drlarxiv,
   title={{DRL-VO}: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles},
   author={Xie, Zhanteng and Dames, Philip},
   journal={arXiv preprint arXiv:2301.06512},
