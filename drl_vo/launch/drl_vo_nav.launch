@@ -50,6 +50,6 @@
     </include>
 
     <!-- Rviz -->
-    <include file="$(find drl_vo_nav)/launch/view_navigation.launch" if="$(arg rviz)"/ >
+    <include file="$(find drl_vo_nav)/launch/view_navigation.launch" if="$(arg rviz)"/>
 
 </launch>

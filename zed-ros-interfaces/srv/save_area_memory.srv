@@ -1,0 +1,5 @@
+# Filename (with path and externsion) of the area memory file. Existing files will be updated
+string area_memory_filename 
+---
+bool result
+string info
