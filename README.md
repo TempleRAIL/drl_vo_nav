@@ -18,6 +18,7 @@ Our DRL-VO control policy is a novel learning-based control policy with strong g
 ## Requirements:
 * Ubuntu 20.04
 * ROS-Noetic
+* protobuf 3.20.0
 * Python 3.8.5
 * Pytorch 1.7.1
 * Tensorboard 2.4.1
@@ -39,6 +40,7 @@ We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 2. install required learning-based packages:
 ```
 sudo apt-get install python-is-python3
+pip install protobuf==3.20.0
 pip install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 pip install gym==0.18.0 pandas==1.2.1
 pip install stable-baselines3==1.1.0
@@ -79,6 +81,7 @@ sudo apt install ./singularity-ce_3.9.7-bionic_amd64.deb
 
 3. install DRL-VO ROS navigation packages:
 ```
+pip install protobuf==3.20.0 
 cd ~
 singularity shell --nv drl_vo_container.sif
 source /etc/.bashrc
