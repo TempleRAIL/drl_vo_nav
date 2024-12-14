@@ -49,6 +49,7 @@ sudo apt-get install ros-noetic-move-base*
 sudo apt-get install ros-noetic-map-server*
 sudo apt-get install ros-noetic-amcl*
 sudo apt-get install ros-noetic-navigation*
+sudo apt-get install ros-noetic-ecl-threads
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 wget https://raw.githubusercontent.com/zzuxzt/turtlebot2_noetic_packages/master/turtlebot2_noetic_install.sh
