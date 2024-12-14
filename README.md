@@ -155,6 +155,7 @@ You can then use the "2D Nav Goal" button on Rviz to set a random goal for the r
 You can deploy our DRL-VO control policy using either a standalone installation or a Singularity container.
 ```
 roscd drl_vo_nav
+cd ..
 git checkout deploy
 cd ../..
 catkin_make
