@@ -38,6 +38,7 @@ We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 1. install ROS Noetic by following [ROS installation document](http://wiki.ros.org/noetic/Installation/Ubuntu). 
 2. install required learning-based packages:
 ```
+sudo apt-get install python-is-python3
 pip install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 pip install gym==0.18.0 pandas==1.2.1
 pip install stable-baselines3==1.1.0
