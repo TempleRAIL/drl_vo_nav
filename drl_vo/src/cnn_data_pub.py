@@ -18,7 +18,7 @@ from geometry_msgs.msg import Point, PoseStamped, Twist, TwistStamped
 from sensor_msgs.msg import Image, LaserScan
 # custom define messages:
 from cnn_msgs.msg import CNN_data
-from zed_interfaces.msg import object_stamped
+from zed_interfaces.msg import ObjectsStamped
 
 # parameters:
 NUM_TP = 10     # the number of timestamps
@@ -46,7 +46,7 @@ class CnnData:
         self.scan_all_tmp = np.zeros(1080)
 
         # initialize ROS objects
-        self.ped_sub = rospy.Subscriber("zed_node/obj_det/objects", object_stamped, self.ped_callback)
+        self.ped_sub = rospy.Subscriber("zed_node/obj_det/objects", ObjectsStamped, self.ped_callback)
         self.scan_sub = rospy.Subscriber("scan", LaserScan, self.scan_callback)
         self.goal_sub = rospy.Subscriber("cnn_goal", Point, self.goal_callback)
         self.vel_sub = rospy.Subscriber("jackal_velocity_controller/cmd_vel", Twist, self.vel_callback)

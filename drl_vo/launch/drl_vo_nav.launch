@@ -42,7 +42,7 @@
         <arg name="scan_topic" value="$(arg scan_topic)"/>
         <arg name="ped_topic" value="$(arg ped_topic)"/>
         <arg name="vel_topic" value="$(arg vel_topic)"/>
-    <include>
+    </include>
 
     <!-- DRL-VO Control Policy -->
     <include file="$(find drl_vo_nav)/launch/drl_vo_inference.launch">
