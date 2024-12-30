@@ -4,6 +4,7 @@ Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded
 https://doi.org/10.1109/TRO.2023.3257549
 )([arXiv](https://arxiv.org/pdf/2301.06512.pdf)) in IEEE Transactions on Robotics (T-RO) 2023. 
 This repository contains our DRL-VO code for training and testing the DRL-VO control policy in its [3D human-robot interaction Gazebo simulator](https://github.com/TempleRAIL/pedsim_ros_with_gazebo).
+Please note that this open source version code directly uses accurate pedestrian information from the Gazebo simulator instead of using the YOLO&MHT pipeline as in our paper (due to some commercial library licensing restrictions in the MHT tracker).
 Video demos can be found at [multimedia demonstrations](https://www.youtube.com/watch?v=KneELRT8GzU&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS&index=2&ab_channel=PhilipDames).
 Here are two GIFs showing our DRL-VO control policy for navigating in the simulation and real world. 
 * Simulation:
@@ -30,6 +31,9 @@ This package requires these packages:
 * [robot_gazebo](https://github.com/TempleRAIL/robot_gazebo): contains our custom configuration files and maps for turtlebot2 navigation.
 * [pedsim_ros_with_gazebo](https://github.com/TempleRAIL/pedsim_ros_with_gazebo): our customized 3D human-robot interaction Gazebo simulator based on [pedsim_ros](https://github.com/srl-freiburg/pedsim_ros).
 * [turtlebot2 packages](https://github.com/zzuxzt/turtlebot2_noetic_packages): turtlebot2 packages on ROS noetic.
+
+Optional packages:
+* [darknet_ros_with_pose](https://github.com/TempleRAIL/darknet_ros_with_pose.git): our customized YOLO_V3 detector includes object physical position measurements.
 
 We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 1) standalone install them on your PC;
