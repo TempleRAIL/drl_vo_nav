@@ -24,8 +24,10 @@ class PurePursuit:
     # Constructor
     def __init__(self):
         # initialize parameters
-        self.lookahead = 2 #rospy.get_param('~lookahead', 5.0)
-        self.rate = 20 #rospy.get_param('~rate', 20.)
+        self.base_frame_id = rospy.get_param('~base_frame_id', "base_link")
+        self.global_frame_id = rospy.get_param('~global_frame_id', "map")
+        self.lookahead = rospy.get_param('~lookahead', 2.0)
+        self.rate = rospy.get_param('~rate', 20.)
         self.timer = None
         self.path = None # store the path to the goal
         self.lock = threading.Lock() # lock to keep data thread safe
@@ -60,7 +62,7 @@ class PurePursuit:
         trans = rot = None
         # look up the current pose of the base_link using the tf tree
         try:
-            (trans,rot) = self.tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+            (trans,rot) = self.tf_listener.lookupTransform(self.global_frame_id, self.base_frame_id, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn('Could not get robot pose')
             return (np.array([np.nan, np.nan]), np.nan)
@@ -194,7 +196,7 @@ class PurePursuit:
             trans = rot = None
             # look up the current pose of the base_link using the tf tree
             try:
-                (trans,rot) = self.tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+                (trans,rot) = self.tf_listener.lookupTransform(self.global_frame_id, self.base_frame_id, rospy.Time(0))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn('Could not get robot pose')
                 return (np.array([np.nan, np.nan]), np.nan)

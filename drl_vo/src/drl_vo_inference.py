@@ -49,7 +49,10 @@ policy_kwargs = dict(
 class DrlVoInference:
     # Constructor
     def __init__(self):
-        # initialize data:  
+        # initialize data: 
+        self.vx_limit = rospy.get_param('~vx_limit', 0.5)
+        self.wz_limit = rospy.get_param('~wz_limit', 0.7)
+
         self.ped_pos = [] 
         self.scan = []
         self.goal = []
@@ -61,8 +64,7 @@ class DrlVoInference:
         if(self.model == None):
             model_file = rospy.get_param('~model_file', "./model/drl_vo.zip")
             self.model = PPO.load(model_file)
-        else:
-            self.model = model
+
         print("Finish loading model.")
 
         # initialize ROS objects
@@ -92,7 +94,7 @@ class DrlVoInference:
             cmd_vel.angular.z = 0
         elif min_scan_dist <= 0.6:
             cmd_vel.linear.x = 0
-            cmd_vel.angular.z = 0.7
+            cmd_vel.angular.z = self.wz_limit
         else:
             # MaxAbsScaler:
             v_min = -2 #-2.5
@@ -134,12 +136,12 @@ class DrlVoInference:
             # velocities:
             vx_min = 0
             if(min_scan_dist >= 2.5): # free space margin
-                vx_max = 0.75
+                vx_max = self.vx_limit #0.75
             else:
-                vx_max = 0.5 
+                vx_max = self.vx_limit / 1.5 #0.5 
             # MaxAbsScaler inverse:
-            vz_min = -0.7 #-2
-            vz_max = 0.7 #2
+            vz_min = -self.wz_limit #-0.7 #-2
+            vz_max = self.wz_limit #0.7 #2
             cmd_vel.linear.x = (action[0] + 1) * (vx_max - vx_min) / 2 + vx_min
             cmd_vel.angular.z = (action[1] + 1) * (vz_max - vz_min) / 2 + vz_min
         

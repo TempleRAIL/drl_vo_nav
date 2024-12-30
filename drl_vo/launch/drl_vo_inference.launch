@@ -1,9 +1,13 @@
 <launch>
-  <arg name="model_file"   default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+  <arg name="model_file"                  default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+  <arg name="vx_limit"                    default="0.5"/>
+  <arg name="wz_limit"                    default="0.7"/>
 
   <!-- DRL-VO publisher -->
   <node name="drl_vo_cmd" pkg="drl_vo_nav" type="drl_vo_inference.py" output="screen">
-    <param name="model_file" value="$(arg model_file)" type="string"/>
+    <param name="model_file"  value="$(arg model_file)" type="string"/>
+    <param name="vx_limit"    value="$(arg vx_limit)"/>
+    <param name="wz_limit"    value="$(arg wz_limit)"/>
   </node>
 
 </launch>

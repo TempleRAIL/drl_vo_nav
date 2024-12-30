@@ -1,52 +1,67 @@
 <launch>
-  <!-- Map -->
-    <arg name="map_file" default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
-    <arg name="model_file" default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
-    <arg name="rviz" default="false"/>
+    <!-- rviz -->
+    <arg name="rviz"                        default="false"/>
+    <!-- Map -->
+    <arg name="map_file"                    default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
     <!-- Subscriber topics -->
-    <arg name="scan_topic"      default="scan"/>  <!-- sensor_msgs::LaserScan -->
-    <arg name="ped_topic"       default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
-    <arg name="vel_topic"       default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
-    <arg name="odom_topic"      default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
+    <arg name="scan_topic"                  default="scan"/>  <!-- sensor_msgs::LaserScan -->
+    <arg name="ped_topic"                   default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
+    <arg name="vel_topic"                   default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
+    <arg name="odom_topic"                  default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
     <!-- Publisher topics -->
-    <arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
+    <arg name="smooth_cmd_vel_topic"        default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
     <!-- AMCL initial pose -->
-    <arg name="initial_pose_x"  default="0.0"/>
-    <arg name="initial_pose_y"  default="0.0"/>
-    <arg name="initial_pose_a"  default="0.0"/>
+    <arg name="initial_pose_x"              default="0.0"/>
+    <arg name="initial_pose_y"              default="0.0"/>
+    <arg name="initial_pose_a"              default="0.0"/>
     <!-- TF frames -->
-    <arg name="base_frame_id"   default="base_link"/>
-    <arg name="global_frame_id" default="map"/>
-    <arg name="odom_frame_id"   default="odom"/>
+    <arg name="base_frame_id"               default="base_link"/>
+    <arg name="global_frame_id"             default="map"/>
+    <arg name="odom_frame_id"               default="odom"/>
+    <!-- Pure Pursuit parameters -->
+    <arg name="lookahead"                   default="2.0"/>
+    <arg name="rate"                        default="20.0"/>
+    <!-- DRL-VO parameters -->
+    <arg name="model_file"                  default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+    <arg name="vx_limit"                    default="0.5"/>
+    <arg name="wz_limit"                    default="0.7"/>
 
     <!-- AMCL & MoveBase -->
     <include file="$(find drl_vo_nav)/launch/amcl_demo_jackal_drl.launch">
-        <arg name="map_file" value="$(arg map_file)"/>
+        <arg name="map_file"                value="$(arg map_file)"/>
         <!-- Input messages -->
-        <arg name="scan_topic" value="$(arg scan_topic)" /> <!-- sensor_msgs::LaserScan -->
-        <arg name="odom_topic" value="$(arg odom_topic)" /> 
-        <arg name="initial_pose_x"            value="$(arg initial_pose_x)"/>
-        <arg name="initial_pose_y"            value="$(arg initial_pose_y)"/>
-        <arg name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+        <arg name="scan_topic"              value="$(arg scan_topic)" /> <!-- sensor_msgs::LaserScan -->
+        <arg name="odom_topic"              value="$(arg odom_topic)" /> 
+        <arg name="initial_pose_x"          value="$(arg initial_pose_x)"/>
+        <arg name="initial_pose_y"          value="$(arg initial_pose_y)"/>
+        <arg name="initial_pose_a"          value="$(arg initial_pose_a)"/>
         <!-- TF frames -->
-        <arg name="base_frame_id" value="$(arg odom_frame_id)" />
-        <arg name="global_frame_id" value="$(arg global_frame_id)" />
-        <arg name="odom_frame_id" value="$(arg odom_frame_id)" />
+        <arg name="base_frame_id"           value="$(arg base_frame_id)" />
+        <arg name="global_frame_id"         value="$(arg global_frame_id)" />
+        <arg name="odom_frame_id"           value="$(arg odom_frame_id)" />
         <!-- Velocity output -->
-        <arg name="smooth_cmd_vel_topic"  value="$(arg smooth_cmd_vel_topic)"/> 
-        <arg name="robot_cmd_vel_topic"   value="$(arg vel_topic)"/>	
+        <arg name="smooth_cmd_vel_topic"    value="$(arg smooth_cmd_vel_topic)"/> 
+        <arg name="robot_cmd_vel_topic"     value="$(arg vel_topic)"/>	
     </include>
 
     <!-- CNN DATA -->
     <include file="$(find drl_vo_nav)/launch/cnn_data_pub.launch">
-        <arg name="scan_topic" value="$(arg scan_topic)"/>
-        <arg name="ped_topic" value="$(arg ped_topic)"/>
-        <arg name="vel_topic" value="$(arg vel_topic)"/>
+        <arg name="scan_topic"              value="$(arg scan_topic)"/>
+        <arg name="ped_topic"               value="$(arg ped_topic)"/>
+        <arg name="vel_topic"               value="$(arg vel_topic)"/>
+        <!-- TF frames -->
+        <arg name="base_frame_id"           value="$(arg base_frame_id)" />
+        <arg name="global_frame_id"         value="$(arg global_frame_id)" />
+
+        <arg name="lookahead"               value="$(arg lookahead)"/> 
+        <arg name="rate"                    value="$(arg rate)"/>
     </include>
 
     <!-- DRL-VO Control Policy -->
     <include file="$(find drl_vo_nav)/launch/drl_vo_inference.launch">
-        <arg name="model_file" value="$(arg model_file)"/>
+        <arg name="model_file"              value="$(arg model_file)"/>
+        <arg name="vx_limit"                value="$(arg vx_limit)"/>
+        <arg name="wz_limit"                value="$(arg wz_limit)"/>
     </include>
 
     <!-- Rviz -->

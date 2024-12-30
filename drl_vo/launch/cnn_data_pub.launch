@@ -1,10 +1,24 @@
 <launch>
-  <arg name="scan_topic"      default="scan"/> 
+  <arg name="scan_topic"     default="scan"/> 
   <arg name="ped_topic"      default="zed_node/obj_det/objects"/> 
   <arg name="vel_topic"      default="jackal_velocity_controller/cmd_vel"/> 
 
+  <arg name="base_frame_id"   default="base_link"/>
+  <arg name="global_frame_id" default="map"/>
+
+  <!-- Pure Pursuit parameters -->
+  <arg name="lookahead"       default="2.0"/>
+  <arg name="rate"            default="20.0"/>
+
   <!-- Subgoal Publisher -->
-  <node name="pure_pursuit" pkg="drl_vo_nav" type="pure_pursuit.py" output="screen" required="true" />
+  <node name="pure_pursuit" pkg="drl_vo_nav" type="pure_pursuit.py" output="screen" required="true" >
+    <!-- TF frames -->
+    <param name="base_frame_id"         value="$(arg base_frame_id)"/> 
+    <param name="global_frame_id"       value="$(arg global_frame_id)"/>
+
+    <param name="lookahead"             value="$(arg lookahead)"/> 
+    <param name="rate"                  value="$(arg rate)"/>
+  </node>
 
   <!-- CNN Data  Publisher -->
   <node name="cnn_data_pub" pkg="drl_vo_nav" type="cnn_data_pub.py">
