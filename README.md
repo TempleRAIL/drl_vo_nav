@@ -19,6 +19,7 @@ Our DRL-VO control policy is a novel learning-based control policy with strong g
 ## Requirements:
 * Ubuntu 20.04
 * ROS-Noetic
+* protobuf 3.20.0
 * Python 3.8.5
 * protobuf 3.20.0 
 * Pytorch 1.7.1
