@@ -4,6 +4,7 @@ Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded
 https://doi.org/10.1109/TRO.2023.3257549
 )([arXiv](https://arxiv.org/pdf/2301.06512.pdf)) in IEEE Transactions on Robotics (T-RO) 2023. 
 This repository contains our DRL-VO code for training and testing the DRL-VO control policy in its [3D human-robot interaction Gazebo simulator](https://github.com/TempleRAIL/pedsim_ros_with_gazebo).
+Please note that this open source version code directly uses accurate pedestrian information from the Gazebo simulator instead of using the YOLO&MHT pipeline as in our paper (due to some commercial library licensing restrictions in the MHT tracker).
 Video demos can be found at [multimedia demonstrations](https://www.youtube.com/watch?v=KneELRT8GzU&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS&index=2&ab_channel=PhilipDames).
 Here are two GIFs showing our DRL-VO control policy for navigating in the simulation and real world. 
 * Simulation:
@@ -20,6 +21,7 @@ Our DRL-VO control policy is a novel learning-based control policy with strong g
 * ROS-Noetic
 * protobuf 3.20.0
 * Python 3.8.5
+* protobuf 3.20.0 
 * Pytorch 1.7.1
 * Tensorboard 2.4.1
 * Gym 0.18.0
@@ -30,6 +32,9 @@ This package requires these packages:
 * [robot_gazebo](https://github.com/TempleRAIL/robot_gazebo): contains our custom configuration files and maps for turtlebot2 navigation.
 * [pedsim_ros_with_gazebo](https://github.com/TempleRAIL/pedsim_ros_with_gazebo): our customized 3D human-robot interaction Gazebo simulator based on [pedsim_ros](https://github.com/srl-freiburg/pedsim_ros).
 * [turtlebot2 packages](https://github.com/zzuxzt/turtlebot2_noetic_packages): turtlebot2 packages on ROS noetic.
+
+Optional packages:
+* [darknet_ros_with_pose](https://github.com/TempleRAIL/darknet_ros_with_pose.git): our customized YOLO_V3 detector includes object physical position measurements.
 
 We provide two ways to install our DRL-VO navigation packages on Ubuntu 20.04:
 1) standalone install them on your PC;
@@ -154,8 +159,8 @@ sh run_drl_vo_navigation_demo.sh
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
-### Deploy on a hardware robot or other simulator for application or evaluation:
-* take the Jackal robot equipped with a ZED2 camera and a Hokuyo lidar as an example, where the ZED2 camera can directly provide pedestrian tracking information:
+### Deploy on a hardware robot or other simulators for application or evaluation:
+* Take the Jackal robot equipped with a ZED2 camera and a Hokuyo-UTM-30LX lidar as an example, where the ZED2 camera can directly provide pedestrian tracking information:
 You can deploy our DRL-VO control policy using either a standalone installation or a Singularity container.
 ```
 roscd drl_vo_nav
@@ -167,27 +172,42 @@ source ~/catkin_ws/devel/setup.sh
 ```
 Please modify the following configuration in the [drl_vo_nav.launch](./drl_vo/launch/drl_vo_nav.launch) according to your robot and environment configuration:
 ```
-  <!-- Map -->
-  <arg name="map_file" default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
-  <arg name="model_file" default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
-  <arg name="rviz" default="false"/>
-  <!-- Subscriber topics -->
-  <arg name="scan_topic"      default="scan"/>  <!-- sensor_msgs::LaserScan -->
-  <arg name="ped_topic"       default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
-  <arg name="vel_topic"       default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
-  <arg name="odom_topic"      default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
-  <!-- Publisher topics -->
-  <arg name="smooth_cmd_vel_topic"  default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
-  <!-- AMCL initial pose -->
-  <arg name="initial_pose_x"  default="0.0"/>
-  <arg name="initial_pose_y"  default="0.0"/>
-  <arg name="initial_pose_a"  default="0.0"/>
-  <!-- TF frames -->
-  <arg name="base_frame_id"   default="base_link"/>
-  <arg name="global_frame_id" default="map"/>
-  <arg name="odom_frame_id"   default="odom"/>
+    <!-- rviz -->
+    <arg name="rviz"                        default="false"/>
+    <!-- Map -->
+    <arg name="map_file"                    default="$(find drl_vo_nav)/maps/coe_full_lobby/coe_full_lobby2.yaml"/>
+    <!-- Subscriber topics -->
+    <arg name="scan_topic"                  default="scan"/>  <!-- sensor_msgs::LaserScan -->
+    <arg name="ped_topic"                   default="zed_node/obj_det/objects"/>  <!-- zed_interfaces::object_stamped -->
+    <arg name="vel_topic"                   default="jackal_velocity_controller/cmd_vel"/> <!-- geometry_msgs::Twist -->
+    <arg name="odom_topic"                  default="odometry/filtered" />  <!-- nav_msgs::Odometry  -->
+    <!-- Publisher topics -->
+    <arg name="smooth_cmd_vel_topic"        default="cmd_vel"/>  <!-- robot control command: geometry_msgs::Twist -->
+    <!-- AMCL initial pose -->
+    <arg name="initial_pose_x"              default="0.0"/>
+    <arg name="initial_pose_y"              default="0.0"/>
+    <arg name="initial_pose_a"              default="0.0"/>
+    <!-- TF frames -->
+    <arg name="base_frame_id"               default="base_link"/>
+    <arg name="global_frame_id"             default="map"/>
+    <arg name="odom_frame_id"               default="odom"/>
+    <!-- Pure Pursuit parameters -->
+    <arg name="lookahead"                   default="2.0"/>
+    <arg name="rate"                        default="20.0"/>
+    <!-- DRL-VO parameters -->
+    <arg name="model_file"                  default="$(find drl_vo_nav)/src/model/drl_vo.zip"/>
+    <arg name="vx_limit"                    default="0.5"/>
+    <arg name="wz_limit"                    default="0.7"/>
 ```
-You can then use roslaunch drl_vo to navigate:
+
+Then, please modify the navigation parameter files in the [param](./drl_vo/param) folder, especially the 'obstacles_layer' in the [costmap_common_params.yaml](./drl_vo/param/jackal/costmap_common_params.yaml).
+```
+obstacles_layer:
+  observation_sources: scan
+  scan: {sensor_frame: hokuyo_link, data_type: LaserScan, topic: scan, marking: true, clearing: true, min_obstacle_height: -2.0, max_obstacle_height: 2.0, obstacle_range: 8, raytrace_range: 8.5}
+``` 
+
+Finally, you can use roslaunch drl_vo to navigate:
 ```
 roslaunch drl_vo_nav drl_vo_nav.launch
 ```
@@ -203,13 +223,6 @@ roslaunch drl_vo_nav drl_vo_nav.launch
   number={4},
   pages={2700-2719},
   doi={10.1109/TRO.2023.3257549}}
-
-@article{xie2023drlarxiv,
-  title={{DRL-VO}: Learning to Navigate Through Crowded Dynamic Scenes Using Velocity Obstacles},
-  author={Xie, Zhanteng and Dames, Philip},
-  journal={arXiv preprint arXiv:2301.06512},
-  year={2023}
-}
 
 @inproceedings{xie2021towards,
   title={Towards safe navigation through crowded dynamic environments},
