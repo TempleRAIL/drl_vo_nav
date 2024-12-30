@@ -159,8 +159,8 @@ sh run_drl_vo_navigation_demo.sh
 You can then use the "2D Nav Goal" button on Rviz to set a random goal for the robot, as shown below:
 ![sending_goal_demo](demos/3.sending_goal_demo.gif "sending_goal_demo") 
 
-### Deploy on a hardware robot or other simulator for application or evaluation:
-* take the Jackal robot equipped with a ZED2 camera and a Hokuyo lidar as an example, where the ZED2 camera can directly provide pedestrian tracking information:
+### Deploy on a hardware robot or other simulators for application or evaluation:
+* Take the Jackal robot equipped with a ZED2 camera and a Hokuyo-UTM-30LX lidar as an example, where the ZED2 camera can directly provide pedestrian tracking information:
 You can deploy our DRL-VO control policy using either a standalone installation or a Singularity container.
 ```
 roscd drl_vo_nav
