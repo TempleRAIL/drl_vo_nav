@@ -1,0 +1,1 @@
+include("${nav2py_DIR}/nav2py_package.cmake")

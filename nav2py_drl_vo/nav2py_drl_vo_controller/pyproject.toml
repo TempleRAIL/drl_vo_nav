@@ -1,0 +1,14 @@
+[project]
+name = "nav2py_drl_vo_controller"
+version = "0.1.0"
+description = "DRL-VO control policy: https://github.com/TempleRAIL/drl_vo_nav"
+readme = "README.md"
+requires-python = "==3.10.12"
+dependencies = [
+    "pyyaml",
+    "jinja2",
+    "typeguard",
+    "gym==0.18.0",
+    "torch==1.11.0", 
+    "stable-baselines3==1.1.0",
+]

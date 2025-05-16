@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav2py</name>
+  <version>0.1.0</version>
+  <description>Base package for building native nav2 python controllers</description>
+  <maintainer email="dev@voshch.dev">voshch</maintainer>
+  <license>MIT</license>
+  
+  <buildtool_depend>ament_cmake_core</buildtool_depend>
+  
+  <depend>rclcpp</depend>
+  <depend>nav2_common</depend>
+  <depend>nav2_core</depend>
+  <depend>geometry_msgs</depend>
+  
+  <build_depend>ament_cmake_python</build_depend>
+  
+  <buildtool_export_depend>ament_cmake_core</buildtool_export_depend>
+  
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav2py_drl_vo_controller</name>
+  <version>0.0.0</version>
+  <description>DRL-VO for nav2 integration: https://github.com/TempleRAIL/drl_vo_nav</description>
+  <maintainer email="dev@voshch.dev">voshch</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <depend>nav2py</depend>
+  <depend>ament_cmake_venv_uv</depend>
+
+  <depend>nav2_common</depend>
+  <depend>nav2_core</depend>
+  <depend>nav2_util</depend>
+  <depend>nav2_costmap_2d</depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav2_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>tf2</depend>
+  <depend>ament_index_cpp</depend>
+  <!-- Scan -->
+  <depend>sensor_msgs</depend>
+
+  <exec_depend>nav2_bringup</exec_depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <nav2_core plugin="${prefix}/nav2py_drl_vo_controller.xml" />
+  </export>
+
+</package>

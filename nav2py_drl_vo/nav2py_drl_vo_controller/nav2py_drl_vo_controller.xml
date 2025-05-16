@@ -1,0 +1,9 @@
+<class_libraries>
+    <library path="nav2py_drl_vo_controller">
+        <class type="nav2py_drl_vo_controller::DrlVoController" base_class_type="nav2_core::Controller">
+            <description>
+                DRL-VO for nav2py controllers.
+            </description>
+        </class>
+    </library>
+</class_libraries>

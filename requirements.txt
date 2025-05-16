@@ -1,5 +1,5 @@
-torch==1.7.1
+python==3.10.12
+torch==1.11.0
 pandas==1.2.1
 gym==0.18.0
 stable-baselines3==1.1.0
-tensorboard==2.4.0
