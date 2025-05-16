@@ -22,7 +22,7 @@ Video demos can be found at [multimedia demonstrations](https://www.youtube.com/
 ```bash
 mkdir -p ~/nav2_ws/src
 cd ~/nav2_ws/src
-git clone git@github.com:zenghjian/nav2py_drl_vo.git
+git clone -b humble https://github.com/TempleRAIL/drl_vo_nav.git
 ```
 
 ### **3. Build the workspace**
