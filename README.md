@@ -4,16 +4,20 @@ Implementation code for our paper ["DRL-VO: Learning to Navigate Through Crowded
 https://doi.org/10.1109/TRO.2023.3257549
 )([arXiv](https://arxiv.org/pdf/2301.06512.pdf)) in IEEE Transactions on Robotics (T-RO) 2023. 
 This repository contains our DRL-VO code for training and testing the DRL-VO control policy in its [3D human-robot interaction Gazebo simulator](https://github.com/TempleRAIL/pedsim_ros_with_gazebo).
-Please note that this open source version code directly uses accurate pedestrian information from the Gazebo simulator instead of using the YOLO&MHT pipeline as in our paper (due to some commercial library licensing restrictions in the MHT tracker).
+Please note that this open source version code directly uses accurate pedestrian information from the Gazebo simulator instead of using the YOLO&MHT pipeline as in our paper (due to some commercial library licensing restrictions in the MHT tracker), which results in a different training result.
 Video demos can be found at [multimedia demonstrations](https://www.youtube.com/watch?v=KneELRT8GzU&list=PLouWbAcP4zIvPgaARrV223lf2eiSR-eSS&index=2&ab_channel=PhilipDames).
 Here are two GIFs showing our DRL-VO control policy for navigating in the simulation and real world. 
 * Simulation:
 ![simulation_demo](demos/1.simulation_demo.gif "simulation_demo") 
 * Real world:
-![hardware_demo](demos/2.hardware_demo.gif "hardware_demo") 
+![hardware_demo](demos/2.hardware_demo.gif "hardware_demo")
+
+## News:
+The ROS2 Humble deployment version is available at ["arena-competition-icra2025-drl-vo"](https://github.com/TempleRAIL/drl_vo_nav/tree/humble/nav2py_drl_vo).
 
 ## Introduction:
-Our DRL-VO control policy is a novel learning-based control policy with strong generalizability to new environments that enables a mobile robot to navigate autonomously through spaces filled with both static obstacles and dense crowds of pedestrians. The policy uses a unique combination of input data to generate the desired steering angle and forward velocity: a short history of lidar data, kinematic data about nearby pedestrians, and a sub-goal point. The policy is trained in a reinforcement learning setting using a reward function that contains a novel term based on velocity obstacles to guide the robot to actively avoid pedestrians and move towards the goal. This DRL-VO control policy is tested in a series of 3D simulated experiments with up to 55 pedestrians and an extensive series of hardware experiments using a turtlebot2 robot with a 2D Hokuyo lidar and a ZED stereo camera. In addition, our DRL-VO control policy ranked 1st in the simulated competition and 3rd in the final physical competition of the ICRA 2022 BARN Challenge, which is tested in highly constrained static environments using a Jackal robot. The deployment code for ICRA 2022 BARN Challenge can be found in ["nav-competition-icra2022-drl-vo"](https://github.com/TempleRAIL/nav-competition-icra2022-drl-vo).
+Our DRL-VO control policy is a novel learning-based control policy with strong generalizability to new environments that enables a mobile robot to navigate autonomously through spaces filled with both static obstacles and dense crowds of pedestrians. The policy uses a unique combination of input data to generate the desired steering angle and forward velocity: a short history of lidar data, kinematic data about nearby pedestrians, and a sub-goal point. The policy is trained in a reinforcement learning setting using a reward function that contains a novel term based on velocity obstacles to guide the robot to actively avoid pedestrians and move towards the goal. This DRL-VO control policy is tested in a series of 3D simulated experiments with up to 55 pedestrians and an extensive series of hardware experiments using a turtlebot2 robot with a 2D Hokuyo lidar and a ZED stereo camera. In addition, our DRL-VO control policy ranked 1st in the simulated competition and 3rd in the final physical competition of the ICRA 2022 BARN Challenge, which was tested in highly constrained static environments using a Jackal robot. It also ranked 1st in the social navigation benchmark of the 2025 ICRA Arena Challenge. The deployment code for ICRA 2022 BARN Challenge can be found in ["nav-competition-icra2022-drl-vo"](https://github.com/TempleRAIL/nav-competition-icra2022-drl-vo).
+The deployment code for the 2025 ICRA Arena Challenge can be found in  ["arena-competition-icra2025-drl-vo"](https://github.com/TempleRAIL/drl_vo_nav/tree/humble/nav2py_drl_vo).
 ![DRL-VO Architecture](demos/4.fig_drl_vo_architecture.svg "drl_vo_architecture") 
 
 ## Requirements:
